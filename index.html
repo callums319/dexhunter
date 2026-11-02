@@ -1,0 +1,288 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DexHunter</title>
+<style>
+:root{--bg:#f2f4f8;--card:#fff;--ink:#14171f;--mut:#6a7282;--bd:#e3e7ee;--red:#e53935;--red2:#ff6b5e;--blue:#2f6fd6;--grn:#22a559;--sh:0 1px 2px #0001,0 6px 18px #1b254012;--trk:#e8ebf1;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0e1015;--card:#181b23;--ink:#eef0f5;--mut:#9aa2b2;--bd:#2a2f3a;--red:#ff5a50;--red2:#ff8a7e;--blue:#6aa0ff;--grn:#3fcf7a;--sh:0 1px 2px #0006,0 8px 22px #0005;--trk:#262b36;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1015;--card:#181b23;--ink:#eef0f5;--mut:#9aa2b2;--bd:#2a2f3a;--red:#ff5a50;--red2:#ff8a7e;--blue:#6aa0ff;--grn:#3fcf7a;--sh:0 1px 2px #0006,0 8px 22px #0005;--trk:#262b36;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 -apple-system,"Segoe UI",Roboto,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+button{font-family:inherit;cursor:pointer;border:0;color:inherit;background:none}
+.wrap{max-width:980px;margin:0 auto;padding:0 14px 40px}
+.hdr{display:flex;align-items:center;gap:12px;padding:16px 2px 12px}
+.logo{width:40px;height:40px;flex-shrink:0}
+h1{margin:0;font-size:1.35rem;font-weight:800;letter-spacing:-.01em}
+.tag{font-size:.78rem;color:var(--mut)}
+.pill-s{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;color:var(--mut);background:var(--card);border:1px solid var(--bd);border-radius:999px;padding:6px 11px}
+.pill-s i{width:8px;height:8px;border-radius:50%;background:#9aa0ac}.pill-s.live{color:var(--grn)}.pill-s.live i{background:var(--grn);box-shadow:0 0 0 3px #3fcf7a33}
+.tiles{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.tile{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:14px;box-shadow:var(--sh)}
+.tile.ring{grid-column:span 6;display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,var(--red),var(--red2));color:#fff;border:0}
+.tile.s{grid-column:span 2}
+.ringsvg{width:92px;height:92px;flex-shrink:0}
+.rt{font-size:.74rem;letter-spacing:.08em;font-weight:700;opacity:.85}.rb{font-size:2rem;font-weight:800;line-height:1.1}.rb small{font-size:1rem;opacity:.8;font-weight:600}.rs{font-size:.85rem;opacity:.9;margin-top:2px}
+.tl{font-size:.7rem;font-weight:700;letter-spacing:.08em;color:var(--mut)}.tv{font-size:1.6rem;font-weight:800;margin-top:2px}.tv small{font-size:.8rem;color:var(--mut);font-weight:600}
+.sec{display:flex;align-items:baseline;justify-content:space-between;margin:22px 2px 10px}.sec h2{margin:0;font-size:1rem;font-weight:800}.sec span{font-size:.78rem;color:var(--mut)}
+.tp{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 8px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+.tc{flex:0 0 118px;scroll-snap-align:start;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:10px 11px;text-align:left;box-shadow:var(--sh)}
+.tc.on{outline:2px solid var(--c);outline-offset:1px}
+.tc b{display:flex;align-items:center;gap:6px;font-size:.8rem}.tc b i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.tc .n{font-size:.72rem;color:var(--mut);margin:3px 0 6px}.tc .bar{height:6px;border-radius:3px;background:var(--trk);overflow:hidden}.tc .bar i{display:block;height:100%;background:var(--c);border-radius:3px}
+.tools{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding:8px 0 10px;margin-top:6px}
+.srch{position:relative}.srch input{width:100%;padding:13px 14px 13px 40px;border-radius:14px;border:1px solid var(--bd);background:var(--card);color:var(--ink);font:inherit;box-shadow:var(--sh)}
+.srch svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--mut)}
+.srch input:focus{outline:2px solid var(--blue)}
+.row2{display:flex;gap:8px;margin-top:9px;align-items:center}
+.seg{flex:1;display:flex;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:3px}
+.seg button{flex:1;padding:8px 2px;border-radius:9px;font-weight:700;font-size:.8rem;color:var(--mut)}
+.seg button.on{background:var(--red);color:#fff}
+select{background:var(--card);color:var(--ink);border:1px solid var(--bd);border-radius:12px;padding:10px 10px;font:inherit;font-size:.8rem;font-weight:600}
+.cnt{font-size:.78rem;color:var(--mut);margin:4px 2px 8px;display:flex;justify-content:space-between;align-items:center}
+.clr{color:var(--blue);font-weight:700;font-size:.78rem}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media (min-width:560px){.grid{grid-template-columns:repeat(3,1fr)}.tile.s{grid-column:span 2}}
+@media (min-width:820px){.grid{grid-template-columns:repeat(4,1fr)}.tiles{grid-template-columns:2fr 1fr 1fr 1fr}.tile.ring{grid-column:auto}.tile.s{grid-column:auto}}
+.pk{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:12px;text-align:left;box-shadow:var(--sh);min-height:112px;display:block;width:100%}
+.pk::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,var(--c1),var(--c2));opacity:.13}
+.pk::after{content:attr(data-no);position:absolute;right:-4px;bottom:-14px;font-size:3.6rem;font-weight:900;color:var(--c1);opacity:.14;letter-spacing:-.04em}
+.pk>*{position:relative;z-index:1}
+.pk .top{display:flex;justify-content:space-between;align-items:flex-start}
+.pk .no{font-size:.72rem;font-weight:800;color:var(--mut)}
+.pk .nm{font-weight:800;font-size:1.02rem;margin:5px 0 7px;line-height:1.15}
+.pk .bst{font-size:.7rem;color:var(--mut);margin-top:8px;font-weight:600}
+.chk{width:28px;height:28px;border-radius:50%;border:2px solid var(--bd);background:var(--card);display:grid;place-items:center;font-size:.9rem;font-weight:900;color:transparent}
+.pk.own .chk{background:var(--grn);border-color:var(--grn);color:#fff}
+.pills{display:flex;gap:5px;flex-wrap:wrap}.pl{font-size:.64rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#fff;padding:3px 8px;border-radius:999px;text-shadow:0 1px 1px #0006}
+.empty{grid-column:1/-1;text-align:center;color:var(--mut);padding:36px 10px}
+.panel{background:var(--card);border:1px solid var(--bd);border-radius:18px;box-shadow:var(--sh);padding:6px 14px 12px}
+.br{display:grid;grid-template-columns:30px 1fr auto;gap:2px 10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--bd)}.br:last-child{border-bottom:0}
+.br .rk{font-weight:800;text-align:center}.br .bn{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.br.me .bn::after{content:" (you)";color:var(--blue);font-weight:600}
+.br .bc{font-weight:800}.br .bb{grid-column:2/4;height:6px;border-radius:3px;background:var(--trk);overflow:hidden}.br .bb i{display:block;height:100%;background:linear-gradient(90deg,var(--red),var(--red2));border-radius:3px}
+.br.me{background:linear-gradient(90deg,#2f6fd610,transparent)}
+.note{font-size:.78rem;color:var(--mut);padding:10px 0 2px}.warn{margin-top:10px;padding:9px 11px;border-radius:10px;background:#e5393518;border:1px solid var(--red);font-size:.8rem}
+.lots{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.lots a{display:flex;justify-content:space-between;padding:12px 14px;background:var(--card);border:1px solid var(--bd);border-radius:12px;text-decoration:none;color:var(--ink);font-weight:700;font-size:.85rem;box-shadow:var(--sh)}.lots a span{color:var(--blue)}
+.ev{padding:12px 0 4px}.ev-d{font-size:.74rem;font-weight:800;letter-spacing:.08em;color:var(--red)}.ev-t{font-size:1.2rem;font-weight:800;margin:3px 0}.ev-m{font-size:.85rem;color:var(--mut)}.ev-n{font-size:.85rem;margin-top:8px;white-space:pre-wrap}.ev-a{display:inline-block;margin-top:10px;padding:10px 14px;border-radius:12px;background:var(--blue);color:#fff;text-decoration:none;font-weight:700;font-size:.85rem}
+.efm{border-top:1px solid var(--bd);margin-top:12px;padding-top:12px;display:grid;gap:8px}.efm input,.efm textarea{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--ink);font:inherit;font-size:.88rem}.efm .r{display:flex;gap:8px}.efm .r input{flex:1;min-width:0}
+.efm button{padding:11px 14px;border-radius:10px;font-weight:700;font-size:.85rem;background:var(--red);color:#fff}.efm button.g{background:none;border:1px solid var(--bd);color:var(--mut)}.efm .lab{font-size:.72rem;font-weight:800;letter-spacing:.08em;color:var(--mut)}
+.ov{position:fixed;inset:0;background:#0009;z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}.ov.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:50;max-width:560px;margin:0 auto;background:var(--card);border-radius:24px 24px 0 0;box-shadow:0 -10px 40px #0006;transform:translateY(105%);transition:transform .25s ease;max-height:88%;overflow:auto;padding-bottom:env(safe-area-inset-bottom,0px)}
+.sheet.on{transform:none}
+.sh-h{position:relative;padding:20px 18px 18px;color:#fff;background:linear-gradient(135deg,var(--c1),var(--c2));border-radius:24px 24px 0 0;text-shadow:0 1px 2px #0005}
+.sh-h .x{position:absolute;right:12px;top:12px;width:34px;height:34px;border-radius:50%;background:#0003;color:#fff;font-size:1.1rem}
+.sh-h .no{font-size:.8rem;font-weight:800;opacity:.9;letter-spacing:.08em}.sh-h .nm{font-size:1.8rem;font-weight:900;line-height:1.1;margin:2px 0 10px}
+.sh-b{padding:14px 18px 18px}
+.stat{display:grid;grid-template-columns:38px 34px 1fr;gap:8px;align-items:center;margin:7px 0;font-size:.82rem}.stat .l{font-weight:800;color:var(--mut)}.stat .v{text-align:right;font-weight:800}.stat .b{height:9px;border-radius:5px;background:var(--trk);overflow:hidden}.stat .b i{display:block;height:100%;border-radius:5px}
+.bt{font-size:.8rem;font-weight:700;color:var(--mut);margin:6px 0 14px}
+.cta{width:100%;padding:14px;border-radius:14px;font-weight:800;font-size:.95rem;color:#fff;background:var(--red)}.cta.got{background:var(--grn)}
+.lk{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.lk a{flex:1;min-width:96px;text-align:center;padding:11px 8px;border-radius:12px;border:1px solid var(--bd);text-decoration:none;color:var(--blue);font-weight:700;font-size:.82rem}
+.nav{display:flex;justify-content:space-between;margin-top:12px}.nav button{padding:8px 14px;border-radius:10px;border:1px solid var(--bd);font-weight:700;font-size:.8rem;color:var(--mut)}
+.foot{font-size:.72rem;color:var(--mut);text-align:center;margin-top:26px}
+</style></head><body>
+<div class="wrap">
+ <div class="hdr">
+  <svg class="logo" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#fff" stroke="#14171f" stroke-width="3"/><path d="M2 20a18 18 0 0 1 36 0z" fill="#e53935" stroke="#14171f" stroke-width="3" stroke-linejoin="round"/><path d="M2 20h36" stroke="#14171f" stroke-width="3"/><circle cx="20" cy="20" r="6" fill="#fff" stroke="#14171f" stroke-width="3"/><circle cx="20" cy="20" r="2.2" fill="#14171f"/></svg>
+  <div><h1>DexHunter</h1><div class="tag">Kanto 151 · Wizards-era hunt</div></div>
+  <div class="pill-s" id="sync"><i></i><span id="syt">Local</span></div>
+ </div>
+ <div class="tiles">
+  <div class="tile ring"><svg class="ringsvg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#ffffff40" stroke-width="10"/><circle id="ringc" cx="50" cy="50" r="42" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-dasharray="0 264" transform="rotate(-90 50 50)"/><text id="ringt" x="50" y="56" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">0%</text></svg>
+   <div><div class="rt">COLLECTION</div><div class="rb"><span id="rh">0</span><small> / 151</small></div><div class="rs" id="rsub"></div></div></div>
+  <div class="tile s"><div class="tl">HAVE</div><div class="tv" id="th">0</div></div>
+  <div class="tile s"><div class="tl">NEED</div><div class="tv" id="tn">0</div></div>
+  <div class="tile s"><div class="tl">RANK</div><div class="tv" id="tr">–</div></div>
+ </div>
+ <div class="sec"><h2>Progress by type</h2><span>Tap to filter</span></div>
+ <div class="tp" id="tp"></div>
+ <div class="tools">
+  <div class="srch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="q" type="search" placeholder="Search name, number or type" autocomplete="off" aria-label="Search"></div>
+  <div class="row2"><div class="seg" id="seg"><button data-m="need">Need</button><button data-m="have">Have</button><button data-m="all">All</button></div>
+  <select id="sort" aria-label="Sort"><option value="no">Sort: #</option><option value="bst">Sort: Stats</option><option value="name">Sort: A–Z</option></select></div>
+ </div>
+ <div class="cnt"><span id="cnt"></span><button class="clr" id="clr" hidden>Clear filters</button></div>
+ <div class="grid" id="grid"></div>
+ <div class="sec"><h2>Trainer rankings</h2><span id="bs"></span></div>
+ <div class="panel" id="board"></div>
+ <div class="sec"><h2>Hunt lots (eBay AU)</h2><span>Buy It Now · Australia · cheapest first</span></div>
+ <div class="lots" id="lots"></div>
+ <div class="sec"><h2>Australian card stores</h2><span>Singles and sealed</span></div>
+ <div class="lots" id="aus"></div>
+ <div class="sec"><h2>Southern Gold Coast events</h2><span>Buy · sell · swap</span></div>
+ <div class="panel" id="evBox"></div>
+ <div class="lots" id="evl" style="margin-top:10px"></div>
+ <div class="foot">Stats are current-generation base stats and types and can differ from printed card values.</div>
+</div>
+<div class="ov" id="ov"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+<script>
+(function(){
+var TOTAL=151,OWNED=[1, 4, 5, 16, 17, 25, 26, 27, 32, 35, 39, 43, 44, 45, 48, 49, 50, 52, 53, 54, 59, 63, 72, 73, 77, 88, 96, 98, 102, 103, 111, 118, 121, 140, 144, 145, 146, 150, 151],RAW=[[1, "Bulbasaur", ["Grass", "Poison"], [45, 49, 49, 65, 65, 45]], [2, "Ivysaur", ["Grass", "Poison"], [60, 62, 63, 80, 80, 60]], [3, "Venusaur", ["Grass", "Poison"], [80, 82, 83, 100, 100, 80]], [4, "Charmander", ["Fire"], [39, 52, 43, 60, 50, 65]], [5, "Charmeleon", ["Fire"], [58, 64, 58, 80, 65, 80]], [6, "Charizard", ["Fire", "Flying"], [78, 84, 78, 109, 85, 100]], [7, "Squirtle", ["Water"], [44, 48, 65, 50, 64, 43]], [8, "Wartortle", ["Water"], [59, 63, 80, 65, 80, 58]], [9, "Blastoise", ["Water"], [79, 83, 100, 85, 105, 78]], [10, "Caterpie", ["Bug"], [45, 30, 35, 20, 20, 45]], [11, "Metapod", ["Bug"], [50, 20, 55, 25, 25, 30]], [12, "Butterfree", ["Bug", "Flying"], [60, 45, 50, 90, 80, 70]], [13, "Weedle", ["Bug", "Poison"], [40, 35, 30, 20, 20, 50]], [14, "Kakuna", ["Bug", "Poison"], [45, 25, 50, 25, 25, 35]], [15, "Beedrill", ["Bug", "Poison"], [65, 90, 40, 45, 80, 75]], [16, "Pidgey", ["Normal", "Flying"], [40, 45, 40, 35, 35, 56]], [17, "Pidgeotto", ["Normal", "Flying"], [63, 60, 55, 50, 50, 71]], [18, "Pidgeot", ["Normal", "Flying"], [83, 80, 75, 70, 70, 101]], [19, "Rattata", ["Normal"], [30, 56, 35, 25, 35, 72]], [20, "Raticate", ["Normal"], [55, 81, 60, 50, 70, 97]], [21, "Spearow", ["Normal", "Flying"], [40, 60, 30, 31, 31, 70]], [22, "Fearow", ["Normal", "Flying"], [65, 90, 65, 61, 61, 100]], [23, "Ekans", ["Poison"], [35, 60, 44, 40, 54, 55]], [24, "Arbok", ["Poison"], [60, 95, 69, 65, 79, 80]], [25, "Pikachu", ["Electric"], [35, 55, 40, 50, 50, 90]], [26, "Raichu", ["Electric"], [60, 90, 55, 90, 80, 110]], [27, "Sandshrew", ["Ground"], [50, 75, 85, 20, 30, 40]], [28, "Sandslash", ["Ground"], [75, 100, 110, 45, 55, 65]], [29, "Nidoran♀", ["Poison"], [55, 47, 52, 40, 40, 41]], [30, "Nidorina", ["Poison"], [70, 62, 67, 55, 55, 56]], [31, "Nidoqueen", ["Poison", "Ground"], [90, 92, 87, 75, 85, 76]], [32, "Nidoran♂", ["Poison"], [46, 57, 40, 40, 40, 50]], [33, "Nidorino", ["Poison"], [61, 72, 57, 55, 55, 65]], [34, "Nidoking", ["Poison", "Ground"], [81, 102, 77, 85, 75, 85]], [35, "Clefairy", ["Fairy"], [70, 45, 48, 60, 65, 35]], [36, "Clefable", ["Fairy"], [95, 70, 73, 95, 90, 60]], [37, "Vulpix", ["Fire"], [38, 41, 40, 50, 65, 65]], [38, "Ninetales", ["Fire"], [73, 76, 75, 81, 100, 100]], [39, "Jigglypuff", ["Normal", "Fairy"], [115, 45, 20, 45, 25, 20]], [40, "Wigglytuff", ["Normal", "Fairy"], [140, 70, 45, 85, 50, 45]], [41, "Zubat", ["Poison", "Flying"], [40, 45, 35, 30, 40, 55]], [42, "Golbat", ["Poison", "Flying"], [75, 80, 70, 65, 75, 90]], [43, "Oddish", ["Grass", "Poison"], [45, 50, 55, 75, 65, 30]], [44, "Gloom", ["Grass", "Poison"], [60, 65, 70, 85, 75, 40]], [45, "Vileplume", ["Grass", "Poison"], [75, 80, 85, 110, 90, 50]], [46, "Paras", ["Bug", "Grass"], [35, 70, 55, 45, 55, 25]], [47, "Parasect", ["Bug", "Grass"], [60, 95, 80, 60, 80, 30]], [48, "Venonat", ["Bug", "Poison"], [60, 55, 50, 40, 55, 45]], [49, "Venomoth", ["Bug", "Poison"], [70, 65, 60, 90, 75, 90]], [50, "Diglett", ["Ground"], [10, 55, 25, 35, 45, 95]], [51, "Dugtrio", ["Ground"], [35, 100, 50, 50, 70, 120]], [52, "Meowth", ["Normal"], [40, 45, 35, 40, 40, 90]], [53, "Persian", ["Normal"], [65, 70, 60, 65, 65, 115]], [54, "Psyduck", ["Water"], [50, 52, 48, 65, 50, 55]], [55, "Golduck", ["Water"], [80, 82, 78, 95, 80, 85]], [56, "Mankey", ["Fighting"], [40, 80, 35, 35, 45, 70]], [57, "Primeape", ["Fighting"], [65, 105, 60, 60, 70, 95]], [58, "Growlithe", ["Fire"], [55, 70, 45, 70, 50, 60]], [59, "Arcanine", ["Fire"], [90, 110, 80, 100, 80, 95]], [60, "Poliwag", ["Water"], [40, 50, 40, 40, 40, 90]], [61, "Poliwhirl", ["Water"], [65, 65, 65, 50, 50, 90]], [62, "Poliwrath", ["Water", "Fighting"], [90, 95, 95, 70, 90, 70]], [63, "Abra", ["Psychic"], [25, 20, 15, 105, 55, 90]], [64, "Kadabra", ["Psychic"], [40, 35, 30, 120, 70, 105]], [65, "Alakazam", ["Psychic"], [55, 50, 45, 135, 95, 120]], [66, "Machop", ["Fighting"], [70, 80, 50, 35, 35, 35]], [67, "Machoke", ["Fighting"], [80, 100, 70, 50, 60, 45]], [68, "Machamp", ["Fighting"], [90, 130, 80, 65, 85, 55]], [69, "Bellsprout", ["Grass", "Poison"], [50, 75, 35, 70, 30, 40]], [70, "Weepinbell", ["Grass", "Poison"], [65, 90, 50, 85, 45, 55]], [71, "Victreebel", ["Grass", "Poison"], [80, 105, 65, 100, 70, 70]], [72, "Tentacool", ["Water", "Poison"], [40, 40, 35, 50, 100, 70]], [73, "Tentacruel", ["Water", "Poison"], [80, 70, 65, 80, 120, 100]], [74, "Geodude", ["Rock", "Ground"], [40, 80, 100, 30, 30, 20]], [75, "Graveler", ["Rock", "Ground"], [55, 95, 115, 45, 45, 35]], [76, "Golem", ["Rock", "Ground"], [80, 120, 130, 55, 65, 45]], [77, "Ponyta", ["Fire"], [50, 85, 55, 65, 65, 90]], [78, "Rapidash", ["Fire"], [65, 100, 70, 80, 80, 105]], [79, "Slowpoke", ["Water", "Psychic"], [90, 65, 65, 40, 40, 15]], [80, "Slowbro", ["Water", "Psychic"], [95, 75, 110, 100, 80, 30]], [81, "Magnemite", ["Electric", "Steel"], [25, 35, 70, 95, 55, 45]], [82, "Magneton", ["Electric", "Steel"], [50, 60, 95, 120, 70, 70]], [83, "Farfetch’d", ["Normal", "Flying"], [52, 90, 55, 58, 62, 60]], [84, "Doduo", ["Normal", "Flying"], [35, 85, 45, 35, 35, 75]], [85, "Dodrio", ["Normal", "Flying"], [60, 110, 70, 60, 60, 110]], [86, "Seel", ["Water"], [65, 45, 55, 45, 70, 45]], [87, "Dewgong", ["Water", "Ice"], [90, 70, 80, 70, 95, 70]], [88, "Grimer", ["Poison"], [80, 80, 50, 40, 50, 25]], [89, "Muk", ["Poison"], [105, 105, 75, 65, 100, 50]], [90, "Shellder", ["Water"], [30, 65, 100, 45, 25, 40]], [91, "Cloyster", ["Water", "Ice"], [50, 95, 180, 85, 45, 70]], [92, "Gastly", ["Ghost", "Poison"], [30, 35, 30, 100, 35, 80]], [93, "Haunter", ["Ghost", "Poison"], [45, 50, 45, 115, 55, 95]], [94, "Gengar", ["Ghost", "Poison"], [60, 65, 60, 130, 75, 110]], [95, "Onix", ["Rock", "Ground"], [35, 45, 160, 30, 45, 70]], [96, "Drowzee", ["Psychic"], [60, 48, 45, 43, 90, 42]], [97, "Hypno", ["Psychic"], [85, 73, 70, 73, 115, 67]], [98, "Krabby", ["Water"], [30, 105, 90, 25, 25, 50]], [99, "Kingler", ["Water"], [55, 130, 115, 50, 50, 75]], [100, "Voltorb", ["Electric"], [40, 30, 50, 55, 55, 100]], [101, "Electrode", ["Electric"], [60, 50, 70, 80, 80, 150]], [102, "Exeggcute", ["Grass", "Psychic"], [60, 40, 80, 60, 45, 40]], [103, "Exeggutor", ["Grass", "Psychic"], [95, 95, 85, 125, 75, 55]], [104, "Cubone", ["Ground"], [50, 50, 95, 40, 50, 35]], [105, "Marowak", ["Ground"], [60, 80, 110, 50, 80, 45]], [106, "Hitmonlee", ["Fighting"], [50, 120, 53, 35, 110, 87]], [107, "Hitmonchan", ["Fighting"], [50, 105, 79, 35, 110, 76]], [108, "Lickitung", ["Normal"], [90, 55, 75, 60, 75, 30]], [109, "Koffing", ["Poison"], [40, 65, 95, 60, 45, 35]], [110, "Weezing", ["Poison"], [65, 90, 120, 85, 70, 60]], [111, "Rhyhorn", ["Ground", "Rock"], [80, 85, 95, 30, 30, 25]], [112, "Rhydon", ["Ground", "Rock"], [105, 130, 120, 45, 45, 40]], [113, "Chansey", ["Normal"], [250, 5, 5, 35, 105, 50]], [114, "Tangela", ["Grass"], [65, 55, 115, 100, 40, 60]], [115, "Kangaskhan", ["Normal"], [105, 95, 80, 40, 80, 90]], [116, "Horsea", ["Water"], [30, 40, 70, 70, 25, 60]], [117, "Seadra", ["Water"], [55, 65, 95, 95, 45, 85]], [118, "Goldeen", ["Water"], [45, 67, 60, 35, 50, 63]], [119, "Seaking", ["Water"], [80, 92, 65, 65, 80, 68]], [120, "Staryu", ["Water"], [30, 45, 55, 70, 55, 85]], [121, "Starmie", ["Water", "Psychic"], [60, 75, 85, 100, 85, 115]], [122, "Mr. Mime", ["Psychic", "Fairy"], [40, 45, 65, 100, 120, 90]], [123, "Scyther", ["Bug", "Flying"], [70, 110, 80, 55, 80, 105]], [124, "Jynx", ["Ice", "Psychic"], [65, 50, 35, 115, 95, 95]], [125, "Electabuzz", ["Electric"], [65, 83, 57, 95, 85, 105]], [126, "Magmar", ["Fire"], [65, 95, 57, 100, 85, 93]], [127, "Pinsir", ["Bug"], [65, 125, 100, 55, 70, 85]], [128, "Tauros", ["Normal"], [75, 100, 95, 40, 70, 110]], [129, "Magikarp", ["Water"], [20, 10, 55, 15, 20, 80]], [130, "Gyarados", ["Water", "Flying"], [95, 125, 79, 60, 100, 81]], [131, "Lapras", ["Water", "Ice"], [130, 85, 80, 85, 95, 60]], [132, "Ditto", ["Normal"], [48, 48, 48, 48, 48, 48]], [133, "Eevee", ["Normal"], [55, 55, 50, 45, 65, 55]], [134, "Vaporeon", ["Water"], [130, 65, 60, 110, 95, 65]], [135, "Jolteon", ["Electric"], [65, 65, 60, 110, 95, 130]], [136, "Flareon", ["Fire"], [65, 130, 60, 95, 110, 65]], [137, "Porygon", ["Normal"], [65, 60, 70, 85, 75, 40]], [138, "Omanyte", ["Rock", "Water"], [35, 40, 100, 90, 55, 35]], [139, "Omastar", ["Rock", "Water"], [70, 60, 125, 115, 70, 55]], [140, "Kabuto", ["Rock", "Water"], [30, 80, 90, 55, 45, 55]], [141, "Kabutops", ["Rock", "Water"], [60, 115, 105, 65, 70, 80]], [142, "Aerodactyl", ["Rock", "Flying"], [80, 105, 65, 60, 75, 130]], [143, "Snorlax", ["Normal"], [160, 110, 65, 65, 110, 30]], [144, "Articuno", ["Ice", "Flying"], [90, 85, 100, 95, 125, 85]], [145, "Zapdos", ["Electric", "Flying"], [90, 90, 85, 125, 90, 100]], [146, "Moltres", ["Fire", "Flying"], [90, 100, 90, 125, 85, 90]], [147, "Dratini", ["Dragon"], [41, 64, 45, 50, 50, 50]], [148, "Dragonair", ["Dragon"], [61, 84, 65, 70, 70, 70]], [149, "Dragonite", ["Dragon", "Flying"], [91, 134, 95, 100, 100, 80]], [150, "Mewtwo", ["Psychic"], [106, 110, 90, 154, 90, 130]], [151, "Mew", ["Psychic"], [100, 100, 100, 100, 100, 100]]];
+var TC={Normal:"#A8A77A",Fire:"#EE8130",Water:"#6390F0",Electric:"#F7D02C",Grass:"#7AC74C",Ice:"#96D9D6",Fighting:"#C22E28",Poison:"#A33EA1",Ground:"#E2BF65",Flying:"#A98FF3",Psychic:"#F95587",Bug:"#A6B91A",Rock:"#B6A136",Ghost:"#735797",Dragon:"#6F35FC",Fairy:"#D685AD",Steel:"#B7B7CE"};
+var SL=["HP","ATK","DEF","SpA","SpD","SPD"];
+var D=RAW.map(function(r){return{no:r[0],name:r[1],t:r[2],s:r[3],bst:r[3].reduce(function(a,b){return a+b},0)}});
+var $=function(i){return document.getElementById(i)};
+var KEY="dexhunter_have_v2",have=null;
+try{var s0=JSON.parse(localStorage.getItem(KEY)||"null");if(Array.isArray(s0))have=new Set(s0)}catch(e){}
+var st={mode:"need",type:"",q:"",sort:"no",list:[],open:null};
+var cloud={db:null,uid:null,owner:false,user:null,players:[],names:{},live:false,msg:""};
+var dirty=false,ver=0,timer=null,initDone=false;
+function pad(n){return("00"+n).slice(-3)}
+function H(n){return !!(have&&have.has(n))}
+function count(){var c=0;D.forEach(function(d){if(H(d.no))c++});return c}
+function base(n){return n.replace("♀","").replace("♂","").replace("Mr. Mime","mr mime").replace("’","").toLowerCase()}
+function eb(q,x){return "https://www.ebay.com.au/sch/i.html?_nkw="+encodeURIComponent(q).replace(/%20/g,"+")+"&LH_BIN=1&LH_PrefLoc=1&_sop=15"+(x||"")}
+function bar(v){return "hsl("+Math.round(Math.min(v,160)/160*120)+",70%,46%)"}
+function cols(d){return [TC[d.t[0]],TC[d.t[1]||d.t[0]]]}
+function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(Array.from(have||[])))}catch(e){}}
+function pills(d){return d.t.map(function(t){return '<span class="pl" style="background:'+TC[t]+'">'+t+'</span>'}).join("")}
+function compute(){
+ var q=st.q.trim().toLowerCase().replace(/^#/,"");
+ var L=D.filter(function(d){
+  if(st.mode==="need"&&H(d.no))return false;
+  if(st.mode==="have"&&!H(d.no))return false;
+  if(st.type&&d.t.indexOf(st.type)<0)return false;
+  if(!q)return true;
+  if(/^\d+$/.test(q)){var n=q.replace(/^0+/,"");return String(d.no).indexOf(n)===0||pad(d.no).indexOf(q)===0}
+  return d.name.toLowerCase().indexOf(q)>-1||d.t.some(function(t){return t.toLowerCase().indexOf(q)>-1});
+ });
+ L.sort(function(a,b){return st.sort==="bst"?b.bst-a.bst:st.sort==="name"?a.name.localeCompare(b.name):a.no-b.no});
+ st.list=L;
+}
+function renderStats(){
+ var c=count(),need=TOTAL-c,pct=Math.round(c/TOTAL*100);
+ $("rh").textContent=c;$("th").textContent=c;$("tn").textContent=need;
+ $("ringt").textContent=pct+"%";$("ringc").setAttribute("stroke-dasharray",(c/TOTAL*263.9)+" 264");
+ $("rsub").textContent=need?need+" to go":"Complete! 🎉";
+ var P=cloud.players.slice().sort(function(a,b){return b.count-a.count||a.t-b.t}),r="–";
+ if(cloud.live&&cloud.uid){var i=P.findIndex(function(p){return p.id===cloud.uid});if(i>-1)r="#"+(i+1)+"<small> of "+P.length+"</small>"}
+ $("tr").innerHTML=r;
+ $("sync").className="pill-s"+(cloud.live?" live":"");$("syt").textContent=cloud.live?"Live sync":"Local";
+ document.querySelectorAll("#seg button").forEach(function(b){var m=b.dataset.m;b.classList.toggle("on",m===st.mode);b.textContent=(m==="need"?"Need "+need:m==="have"?"Have "+c:"All "+TOTAL)});
+}
+function renderTypes(){
+ var types=Object.keys(TC).filter(function(t){return D.some(function(d){return d.t.indexOf(t)>-1})});
+ $("tp").innerHTML=types.map(function(t){
+  var all=D.filter(function(d){return d.t.indexOf(t)>-1}),h=all.filter(function(d){return H(d.no)}).length;
+  return '<button class="tc'+(st.type===t?" on":"")+'" data-ty="'+t+'" style="--c:'+TC[t]+'"><b><i></i>'+t+'</b><div class="n">'+h+' / '+all.length+'</div><div class="bar"><i style="width:'+(h/all.length*100)+'%"></i></div></button>';
+ }).join("");
+}
+function renderGrid(){
+ compute();
+ $("cnt").textContent=st.list.length+" Pokémon";
+ $("clr").hidden=!(st.q||st.type);
+ if(!st.list.length){$("grid").innerHTML='<div class="empty">'+(st.mode==="need"&&!st.q&&!st.type?"All caught! Nothing left to hunt. 🎉":"No Pokémon match your filters.")+'</div>';return}
+ $("grid").innerHTML=st.list.map(function(d){
+  var c=cols(d);
+  return '<button class="pk'+(H(d.no)?" own":"")+'" data-no="'+pad(d.no)+'" data-open="'+d.no+'" style="--c1:'+c[0]+';--c2:'+c[1]+'"><div class="top"><span class="no">#'+pad(d.no)+'</span><span class="chk" data-chk="'+d.no+'" role="button" aria-label="Toggle have">✓</span></div><div class="nm">'+d.name+'</div><div class="pills">'+pills(d)+'</div><div class="bst">Total '+d.bst+'</div></button>';
+ }).join("");
+}
+function renderBoard(){
+ var P=cloud.players.slice();
+ if(!P.length&&!cloud.uid)P=[{id:"__local",count:count(),t:0}];
+ P.sort(function(a,b){return b.count-a.count||a.t-b.t});
+ $("bs").textContent=cloud.live?P.length+" trainer"+(P.length===1?"":"s"):"Local only";
+ var h=P.map(function(p,i){
+  var me=p.id===cloud.uid||p.id==="__local",rk=i===0?"🥇":i===1?"🥈":i===2?"🥉":String(i+1);
+  return '<div class="br'+(me?" me":"")+'"><span class="rk">'+rk+'</span><span class="bn" data-id="'+p.id+'"></span><span class="bc">'+p.count+'/'+TOTAL+'</span><div class="bb"><i style="width:'+(p.count/TOTAL*100)+'%"></i></div></div>';
+ }).join("");
+ if(!P.length)h='<div class="note">No trainers yet. Tick a Pokémon to join.</div>';
+ if(!cloud.live)h+='<div class="note">Open the shared link while signed in to join the rankings.</div>';
+ h+='<div class="warn" id="warn" hidden></div>';
+ $("board").innerHTML=h;
+ $("board").querySelectorAll(".bn").forEach(function(el){var id=el.getAttribute("data-id");el.textContent=id==="__local"?"You":(cloud.names[id]||"Trainer")});
+ var w=$("warn");if(cloud.msg){w.hidden=false;w.textContent=cloud.msg}
+}
+function renderSheet(){
+ var d=D.filter(function(x){return x.no===st.open})[0],sh=$("sheet");
+ if(!d){sh.classList.remove("on");$("ov").classList.remove("on");return}
+ var c=cols(d),got=H(d.no),q="pokemon "+base(d.name)+" (base,jungle,fossil,rocket) -psa -cgc -bgs -digital";
+ sh.style.setProperty("--c1",c[0]);sh.style.setProperty("--c2",c[1]);
+ sh.innerHTML='<div class="sh-h"><button class="x" data-close aria-label="Close">✕</button><div class="no">No.'+pad(d.no)+'</div><div class="nm">'+d.name+'</div><div class="pills">'+pills(d)+'</div></div><div class="sh-b">'+
+ d.s.map(function(v,i){return '<div class="stat"><span class="l">'+SL[i]+'</span><span class="v">'+v+'</span><span class="b"><i style="width:'+Math.min(v/160*100,100)+'%;background:'+bar(v)+'"></i></span></div>'}).join("")+
+ '<div class="bt">Base stat total '+d.bst+'</div><button class="cta'+(got?" got":"")+'" data-tog="'+d.no+'">'+(got?"✓ In my collection · tap to undo":"Mark as collected")+'</button>'+
+ '<div class="lk"><a href="'+eb(q)+'" target="_blank" rel="noopener">eBay AU</a><a href="'+eb(q,"&LH_Sold=1&LH_Complete=1")+'" target="_blank" rel="noopener">Sold prices</a><a href="https://www.facebook.com/marketplace/search/?query='+encodeURIComponent("pokemon "+base(d.name)+" card")+'" target="_blank" rel="noopener">Marketplace</a><a href="'+auq(d.name)+'" target="_blank" rel="noopener">AU stores</a></div>'+
+ '<div class="nav"><button data-nav="-1">‹ Prev</button><button data-nav="1">Next ›</button></div></div>';
+ sh.classList.add("on");$("ov").classList.add("on");
+}
+function render(){renderStats();renderTypes();renderGrid();renderBoard();if(st.open)renderSheet()}
+function toggle(no){
+ if(!have)have=new Set();
+ if(have.has(no))have.delete(no);else have.add(no);
+ try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}
+ saveLocal();scheduleSave();render();
+}
+function scheduleSave(now){if(!cloud.db||!cloud.uid)return;dirty=true;ver++;clearTimeout(timer);timer=setTimeout(doSave,now?0:600)}
+function doSave(){
+ var v=ver,arr=Array.from(have||[]).sort(function(a,b){return a-b});
+ return cloud.db.doc("players/"+cloud.uid).set({have:arr,count:arr.length,updatedAt:Date.now()}).then(function(){cloud.msg=""}).catch(function(e){
+  cloud.msg=(e&&e.code==="not_granted")?"View-only access: ask the owner for Contributor access to join the rankings.":"Sync failed. Saved on this device.";
+ }).then(function(){if(v===ver)dirty=false;renderBoard()});
+}
+function names(){
+ if(!cloud.user||!cloud.players.length)return;
+ var ids=cloud.players.map(function(p){return p.id});
+ cloud.user.profiles(ids).then(function(ps){ids.forEach(function(i){cloud.names[i]=(ps[i]&&ps[i].name)||""});renderBoard()}).catch(function(){});
+}
+function subscribe(){
+ cloud.db.doc("events/next").onSnapshot(function(sn){ev=sn.exists?sn.data():null;renderEvent()},function(){});
+ cloud.db.collection("players").onSnapshot(function(snap){
+  var arr=[],mine=null;
+  snap.docs.forEach(function(d){var x=d.data()||{},h=Array.isArray(x.have)?x.have.filter(function(n){return n>=1&&n<=TOTAL}):[];var o={id:d.id,count:h.length,have:h,t:+x.updatedAt||0};arr.push(o);if(d.id===cloud.uid)mine=o});
+  cloud.players=arr;cloud.live=true;
+  if(mine){if(!dirty){have=new Set(mine.have);saveLocal()}}else if(!initDone){initDone=true;scheduleSave(true)}
+  names();render();
+ },function(){cloud.live=false;renderStats()});
+}
+var ev=null;
+function auq(n){return "https://www.google.com.au/search?q="+encodeURIComponent("pokemon "+base(n)+" card (site:goodgames.com.au OR site:cherrycollectables.com.au)")}
+function safeUrl(u){return /^https?:\/\//i.test(u||"")?u:""}
+function fmtDate(x){if(!x)return "";var d=new Date(x+"T00:00:00");if(isNaN(d))return x;var t=new Date();t.setHours(0,0,0,0);var n=Math.round((d-t)/864e5);return d.toLocaleDateString("en-AU",{weekday:"short",day:"numeric",month:"short",year:"numeric"})+(n>0?" · in "+n+" day"+(n===1?"":"s"):n===0?" · TODAY":" · past, update me")}
+function renderEvent(){
+ var h="",on=ev&&ev.title;
+ if(on)h='<div class="ev"><div class="ev-d" id="evD"></div><div class="ev-t" id="evT"></div><div class="ev-m" id="evM"></div><div class="ev-n" id="evN"></div><a class="ev-a" id="evA" target="_blank" rel="noopener" hidden>Event page ↗</a></div>';
+ else h='<div class="note">No event pinned yet. Use the searches below to find the next buy / sell / swap day.</div>';
+ if(cloud.owner&&cloud.db)h+='<div class="efm"><div class="lab">PIN THE NEXT EVENT (VISIBLE TO EVERYONE)</div><input id="fTitle" maxlength="120" placeholder="Event name"><div class="r"><input id="fDate" type="date" aria-label="Date"><input id="fTime" maxlength="30" placeholder="Time, e.g. 9am–2pm"></div><input id="fVenue" maxlength="120" placeholder="Venue / suburb"><input id="fUrl" maxlength="300" placeholder="Event link (optional)"><textarea id="fNote" rows="2" maxlength="300" placeholder="Notes"></textarea><div class="r"><button data-evsave>Pin event</button><button class="g" data-evclear>Clear</button></div><div class="note" id="fMsg"></div></div>';
+ $("evBox").innerHTML=h;
+ if(on){$("evD").textContent=fmtDate(ev.date)||"DATE TBC";$("evT").textContent=ev.title;$("evM").textContent=[ev.time,ev.venue].filter(Boolean).join(" · ");$("evN").textContent=ev.note||"";var u=safeUrl(ev.url),a=$("evA");if(u){a.href=u;a.hidden=false}}
+ if(cloud.owner&&cloud.db&&on){$("fTitle").value=ev.title||"";$("fDate").value=ev.date||"";$("fTime").value=ev.time||"";$("fVenue").value=ev.venue||"";$("fUrl").value=ev.url||"";$("fNote").value=ev.note||""}
+}
+function saveEvent(){
+ var t=$("fTitle").value.trim();if(!t){$("fMsg").textContent="Add an event name first.";return}
+ cloud.db.doc("events/next").set({title:t,date:$("fDate").value,time:$("fTime").value.trim(),venue:$("fVenue").value.trim(),url:safeUrl($("fUrl").value.trim()),note:$("fNote").value.trim(),updatedAt:Date.now()}).then(function(){var m=$("fMsg");if(m)m.textContent="Pinned."}).catch(function(){var m=$("fMsg");if(m)m.textContent="Could not save. Only the owner can pin events."});
+}
+function clearEvent(){cloud.db.doc("events/next").delete().then(function(){ev=null;renderEvent()}).catch(function(){})}
+function closeSheet(){st.open=null;renderSheet()}
+document.addEventListener("click",function(e){
+ var c=e.target.closest("[data-chk]");if(c){e.stopPropagation();toggle(+c.dataset.chk);return}
+ if(e.target.closest("[data-close]")||e.target===$("ov")){closeSheet();return}
+ if(e.target.closest("[data-evsave]")){saveEvent();return}
+ if(e.target.closest("[data-evclear]")){clearEvent();return}
+ var tg=e.target.closest("[data-tog]");if(tg){toggle(+tg.dataset.tog);return}
+ var nv=e.target.closest("[data-nav]");if(nv){var i=st.list.findIndex(function(d){return d.no===st.open});var j=i+(+nv.dataset.nav);if(i>-1&&j>=0&&j<st.list.length){st.open=st.list[j].no;renderSheet()}else if(i===-1&&st.list.length){st.open=st.list[0].no;renderSheet()}return}
+ var op=e.target.closest("[data-open]");if(op){st.open=+op.dataset.open;renderSheet();return}
+ var ty=e.target.closest(".tc");if(ty){st.type=st.type===ty.dataset.ty?"":ty.dataset.ty;renderTypes();renderGrid();return}
+ var m=e.target.closest("#seg button");if(m){st.mode=m.dataset.m;renderStats();renderGrid();return}
+ if(e.target.closest("#clr")){st.q="";st.type="";$("q").value="";renderTypes();renderGrid()}
+});
+$("q").addEventListener("input",function(e){st.q=e.target.value;renderGrid();$("clr").hidden=!(st.q||st.type)});
+$("sort").addEventListener("change",function(e){st.sort=e.target.value;renderGrid()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&st.open)closeSheet()});
+var lots=[["Base Set commons lot","pokemon base set common lot"],["Jungle / Fossil / Rocket lot","pokemon jungle fossil team rocket lot"],["WOTC bulk lot 1999","pokemon wotc bulk lot 1999"],["Base Set 2 lot","pokemon base set 2 lot"],["Vintage commons and uncommons","pokemon vintage commons uncommons lot"]];
+$("lots").innerHTML=lots.map(function(l){return '<a href="'+eb(l[1])+'" target="_blank" rel="noopener">'+l[0]+'<span>↗</span></a>'}).join("")+'<a href="https://www.facebook.com/marketplace/search/?query=pokemon%20base%20set%20cards" target="_blank" rel="noopener">Facebook Marketplace<span>↗</span></a><a href="https://www.gumtree.com.au/s-pokemon+base+set/k0" target="_blank" rel="noopener">Gumtree<span>↗</span></a>';
+$("aus").innerHTML='<a href="https://www.goodgames.com.au/" target="_blank" rel="noopener">Good Games (AU)<span>↗</span></a><a href="https://www.cherrycollectables.com.au/" target="_blank" rel="noopener">Cherry Collectables (AU)<span>↗</span></a><a href="https://www.google.com.au/search?q=pokemon+singles+%28site%3Agoodgames.com.au+OR+site%3Acherrycollectables.com.au%29" target="_blank" rel="noopener">Search both for singles<span>↗</span></a>';
+$("evl").innerHTML='<a href="https://www.facebook.com/events/search/?q=pokemon%20cards%20gold%20coast" target="_blank" rel="noopener">Facebook events<span>↗</span></a><a href="https://www.eventbrite.com.au/d/australia--gold-coast/pokemon/" target="_blank" rel="noopener">Eventbrite<span>↗</span></a><a href="https://www.meetup.com/find/?keywords=pokemon&location=au--Gold%20Coast" target="_blank" rel="noopener">Meetup<span>↗</span></a><a href="https://www.google.com.au/search?q=pokemon+trading+card+swap+meet+southern+gold+coast+burleigh+robina+tweed" target="_blank" rel="noopener">Google: swap meets<span>↗</span></a>';
+render();renderEvent();
+(async function init(){
+ try{
+  if(!window.claude){if(have===null){have=new Set(OWNED);saveLocal();render()}return}
+  var user=await window.claude.use("user");
+  if(user){cloud.user=user;cloud.uid=await user.id();cloud.owner=await user.isOwner()}
+ }catch(e){}
+ if(have===null){have=new Set(cloud.owner?OWNED:[]);saveLocal()}
+ render();renderEvent();
+ try{var db=await window.claude.use("db");if(db&&cloud.uid){cloud.db=db;subscribe()}}catch(e){}
+})();
+})();
+</script></body></html>
